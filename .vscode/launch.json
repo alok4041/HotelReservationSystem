@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-HotelResevationSystemApplication<HotelResevationSystem>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "org.cozy.HotelReservationSystem.HotelResevationSystemApplication",
+            "projectName": "HotelResevationSystem",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
