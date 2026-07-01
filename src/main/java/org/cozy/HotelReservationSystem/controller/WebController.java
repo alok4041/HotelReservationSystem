@@ -1,16 +1,25 @@
 package org.cozy.HotelReservationSystem.controller;
 
-import org.cozy.HotelReservationSystem.model.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.cozy.HotelReservationSystem.model.Customer;
+import org.cozy.HotelReservationSystem.model.Reservation;
+import org.cozy.HotelReservationSystem.model.Room;
 import org.cozy.HotelReservationSystem.repository.CustomerRepository;
-import org.cozy.HotelReservationSystem.service.*;
+import org.cozy.HotelReservationSystem.service.CustomerService;
+import org.cozy.HotelReservationSystem.service.ReservationService;
+import org.cozy.HotelReservationSystem.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class WebController {
@@ -53,6 +62,7 @@ public class WebController {
 
     @GetMapping("/search")
     public String searchReservations(@RequestParam(required = false) String keyword, Model model) {
+        model.addAttribute("keyword", keyword);
         if (keyword != null && !keyword.isEmpty()) {
             // Use the new method name here
             List<Customer> matchingCustomers = customerRepository.searchCustomers(keyword);
@@ -61,7 +71,8 @@ public class WebController {
                     .filter(res -> matchingCustomers.contains(res.getCustomer()))
                     .collect(Collectors.toList());
             model.addAttribute("results", filtered);
-            model.addAttribute("keyword", keyword);
+        } else {
+            model.addAttribute("results", new ArrayList<>());
         }
         return "search";
     }
