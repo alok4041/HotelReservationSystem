@@ -1,15 +1,15 @@
 package org.cozy.HotelReservationSystem.service;
 
+import java.math.BigDecimal;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
 import org.cozy.HotelReservationSystem.model.Reservation;
 import org.cozy.HotelReservationSystem.model.Room;
 import org.cozy.HotelReservationSystem.repository.ReservationRepository;
 import org.cozy.HotelReservationSystem.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
 
 @Service
 public class ReservationService {
@@ -56,6 +56,19 @@ public class ReservationService {
     public Reservation updateReservationStatus(Integer id, String status) {
         Reservation reservation = getReservationById(id);
         reservation.setStatus(status);
+        return reservationRepository.save(reservation);
+    }
+
+    // UPDATE - Check out a reservation
+    public Reservation checkoutReservation(Integer id) {
+        Reservation reservation = getReservationById(id);
+
+        // Make room available again after checkout
+        Room room = reservation.getRoom();
+        room.setStatus("Available");
+        roomRepository.save(room);
+
+        reservation.setStatus("Checked Out");
         return reservationRepository.save(reservation);
     }
 

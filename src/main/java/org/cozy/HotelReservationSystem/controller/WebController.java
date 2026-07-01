@@ -48,14 +48,14 @@ public class WebController {
             @RequestParam String name, @RequestParam String email, @RequestParam String phone,
             @RequestParam Integer roomId, @RequestParam LocalDate checkInDate,
             @RequestParam LocalDate checkOutDate, @RequestParam Integer numberOfGuests) {
-        
+
         // Check if customer already exists by email
-        Customer customer = customerRepository.findByEmail(email);
+        Customer customer = customerRepository.findByEmail(email).orElse(null);
         if (customer == null) {
             // Create new customer if not found
             customer = customerService.createCustomer(new Customer(null, name, email, phone, null, null));
         }
-        
+
         Reservation reservation = new Reservation();
         reservation.setCustomer(customer);
         reservation.setRoom(roomService.getRoomById(roomId));
@@ -72,7 +72,7 @@ public class WebController {
         if (keyword != null && !keyword.isEmpty()) {
             // Use the new method name here
             List<Customer> matchingCustomers = customerRepository.searchCustomers(keyword);
-            
+
             List<Reservation> filtered = reservationService.getAllReservations().stream()
                     .filter(res -> matchingCustomers.contains(res.getCustomer()))
                     .collect(Collectors.toList());
@@ -132,6 +132,12 @@ public class WebController {
     @GetMapping("/web/reservations/cancel/{id}")
     public String cancelReservation(@PathVariable Integer id) {
         reservationService.cancelReservation(id);
+        return "redirect:/web/reservations";
+    }
+
+    @GetMapping("/web/reservations/checkout/{id}")
+    public String checkoutReservation(@PathVariable Integer id) {
+        reservationService.checkoutReservation(id);
         return "redirect:/web/reservations";
     }
 }
