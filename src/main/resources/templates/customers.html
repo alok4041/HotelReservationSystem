@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Management - Cozy Hotel</title>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --bg-dark: #0f172a;
+            --bg-light: #f8fafc;
+            --text-main: #1e293b;
+            --text-secondary: #64748b;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-custom {
+            background-color: var(--bg-dark);
+            padding: 1.25rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .navbar-brand-custom {
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: #ffffff !important;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .brand-icon {
+            background: linear-gradient(135deg, var(--primary-color), #60a5fa);
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .main-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.03);
+            padding: 2.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-weight: 800;
+            font-size: 1.75rem;
+            letter-spacing: -0.5px;
+            color: var(--bg-dark);
+            margin: 0;
+        }
+
+        .table-responsive {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table th {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            padding: 1rem;
+            border-bottom: 1px solid #cbd5e1;
+        }
+
+        .table td {
+            padding: 1.25rem 1rem;
+            vertical-align: middle;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .client-name {
+            font-weight: 700;
+            color: var(--bg-dark);
+            font-size: 0.95rem;
+        }
+
+        .contact-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .btn-delete-custom {
+            border-radius: 8px;
+            padding: 0.4rem 0.8rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-dark navbar-custom">
+        <div class="container">
+            <a class="navbar-brand-custom" href="/">
+                <div class="brand-icon">H</div>
+                <span>Cozy Hotel Portal</span>
+            </a>
+            <div>
+                <a th:href="@{/}" class="btn btn-outline-light btn-sm px-3 rounded-pill">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="main-card">
+            
+            <div class="section-header">
+                <div>
+                    <h1 class="section-title">Customer Registry</h1>
+                    <p class="text-muted mb-0 small">Monitor registered hotel guests, update contact records, and track client files.</p>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Guest Profile</th>
+                            <th>Email Address</th>
+                            <th>Phone Connection</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="cust : ${listCustomers}">
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="avatar-placeholder" style="width: 40px; height: 40px; background-color: rgba(59, 130, 246, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-weight: bold; font-size: 0.95rem;" th:text="${cust.name.substring(0, 1).toUpperCase()}">
+                                        JD
+                                    </div>
+                                    <div>
+                                        <div class="client-name" th:text="${cust.name}">John Doe</div>
+                                        <div class="small text-muted" th:text="${cust.address != null ? cust.address : 'No address specified'}">San Francisco, CA</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="contact-info">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                      <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383-4.758 2.855L15 11.114v-5.73zm-.03 4.992L10.27 8.192 8 9.555 5.73 8.192 1.03 11.375A1 1 0 0 0 2 12h12a1 1 0 0 0 .97-.625zM1 11.114l4.758-2.876L1 5.383v5.73z"/>
+                                    </svg>
+                                    <span th:text="${cust.email}">johndoe@example.com</span>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="contact-info">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                                      <path d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"/>
+                                    </svg>
+                                    <span th:text="${cust.phone}">+1 (555) 019-9922</span>
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <a th:href="@{/web/customers/delete/{id}(id=${cust.customerId})}" class="btn btn-outline-danger btn-delete-custom">
+                                    Delete Account
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:if="${listCustomers.isEmpty()}">
+                            <td colspan="4" class="text-center py-5 text-muted">
+                                <p class="mb-0">No customers registered in the database.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

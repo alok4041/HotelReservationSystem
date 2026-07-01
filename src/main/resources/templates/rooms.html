@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Rooms - Cozy Hotel</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom Premium Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #2b2f32;
+        }
+        
+        .navbar {
+            background-color: #1a1e21 !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .main-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .btn-add-room {
+            background-color: #0d6efd;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            padding: 0.6rem 1.2rem;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15);
+        }
+
+        .btn-add-room:hover {
+            background-color: #0b5ed7;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(13, 110, 253, 0.25);
+        }
+
+        .table-responsive {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table th {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            padding: 1rem;
+            border-bottom: 1px solid #cbd5e1;
+        }
+
+        .table td {
+            padding: 1rem;
+            vertical-align: middle;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Badges */
+        .status-badge {
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 30px;
+            display: inline-block;
+        }
+
+        .badge-available {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .badge-booked {
+            background-color: #cff4fc;
+            color: #055160;
+        }
+
+        .badge-maintenance {
+            background-color: #fff3cd;
+            color: #664d03;
+        }
+
+        /* Modal styling */
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #f1f5f9;
+            padding: 1.5rem 1.5rem 1rem 1.5rem;
+        }
+
+        .modal-title {
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            border-top: 1px solid #f1f5f9;
+            padding: 1rem 1.5rem 1.5rem 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #475569;
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            padding: 0.6rem 0.8rem;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .btn-close-modal {
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+        }
+
+        .btn-submit-modal {
+            border-radius: 8px;
+            font-weight: 600;
+            padding: 0.5rem 1.2rem;
+        }
+        
+        .btn-delete {
+            border-radius: 8px;
+            padding: 0.35rem 0.75rem;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-edit {
+            border-radius: 8px;
+            padding: 0.35rem 0.75rem;
+            font-weight: 500;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">🏨 Cozy Hotel - Reception Desk</a>
+            <div class="ms-auto">
+                <a th:href="@{/}" class="btn btn-outline-light btn-sm px-3 rounded-pill">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mb-5">
+        <div class="main-card">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Room Inventory Management</h1>
+                    <p class="text-muted mb-0 small">Add, monitor, and remove hotel rooms from the registry.</p>
+                </div>
+                <div>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary btn-add-room d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#addRoomModal">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                          <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                        </svg>
+                        Add New Room
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Room #</th>
+                            <th>Room Type</th>
+                            <th>Price / Night</th>
+                            <th>Max Capacity</th>
+                            <th>Status</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="room : ${listRooms}">
+                            <td class="fw-semibold text-dark" th:text="${room.roomNumber}"></td>
+                            <td th:text="${room.roomType}"></td>
+                            <td class="fw-medium text-secondary" th:text="${'$' + room.pricePerNight}"></td>
+                            <td>
+                                <span class="d-flex align-items-center gap-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="text-muted" viewBox="0 0 16 16">
+                                      <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                    </svg>
+                                    <span th:text="${room.capacity + ' Guest' + (room.capacity > 1 ? 's' : '')}"></span>
+                                </span>
+                            </td>
+                            <td>
+                                <span class="status-badge" 
+                                      th:classappend="${room.status == 'Available' ? 'badge-available' : (room.status == 'Booked' ? 'badge-booked' : 'badge-maintenance')}" 
+                                      th:text="${room.status}">
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <button type="button" class="btn btn-outline-primary btn-sm btn-edit"
+                                            data-bs-toggle="modal" data-bs-target="#editRoomModal"
+                                            th:data-id="${room.roomId}"
+                                            th:data-number="${room.roomNumber}"
+                                            th:data-type="${room.roomType}"
+                                            th:data-price="${room.pricePerNight}"
+                                            th:data-capacity="${room.capacity}"
+                                            th:data-status="${room.status}">
+                                        Edit
+                                    </button>
+                                    <a th:href="@{/web/rooms/delete/{id}(id=${room.roomId})}" class="btn btn-outline-danger btn-sm btn-delete">
+                                        Remove
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${listRooms.isEmpty()}">
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <p class="mb-0">No rooms available in the database.</p>
+                                <button type="button" class="btn btn-link btn-sm text-decoration-none mt-2" data-bs-toggle="modal" data-bs-target="#addRoomModal">Add the first room</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal to Add New Room -->
+    <div class="modal fade" id="addRoomModal" tabindex="-1" aria-labelledby="addRoomModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form th:action="@{/web/rooms/save}" th:object="${newRoom}" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addRoomModalLabel">Add New Room</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="roomNumber" class="form-label">Room Number</label>
+                                <input type="text" id="roomNumber" th:field="*{roomNumber}" class="form-control" placeholder="e.g. 101, 204B" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="roomType" class="form-label">Room Type</label>
+                                <select id="roomType" th:field="*{roomType}" class="form-select" required>
+                                    <option value="Single">Single Room</option>
+                                    <option value="Double">Double Room</option>
+                                    <option value="Deluxe">Deluxe Room</option>
+                                    <option value="Suite">Suite</option>
+                                    <option value="Penthouse">Penthouse</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="pricePerNight" class="form-label">Price per Night ($)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" id="pricePerNight" th:field="*{pricePerNight}" step="0.01" min="0" class="form-control" placeholder="0.00" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="capacity" class="form-label">Max Guest Capacity</label>
+                                <select id="capacity" th:field="*{capacity}" class="form-select" required>
+                                    <option value="1">1 Guest</option>
+                                    <option value="2">2 Guests</option>
+                                    <option value="3">3 Guests</option>
+                                    <option value="4">4 Guests</option>
+                                    <option value="5">5 Guests</option>
+                                    <option value="6">6 Guests</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="status" class="form-label">Initial Status</label>
+                                <select id="status" th:field="*{status}" class="form-select" required>
+                                    <option value="Available">Available</option>
+                                    <option value="Under Maintenance">Under Maintenance</option>
+                                    <option value="Booked">Booked</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-close-modal" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary btn-submit-modal">Save Room</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal to Edit Room -->
+    <div class="modal fade" id="editRoomModal" tabindex="-1" aria-labelledby="editRoomModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form id="editRoomForm" method="POST">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editRoomModalLabel">Edit Room</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Room Number</label>
+                                <input type="text" id="editRoomNumber" name="roomNumber" class="form-control" placeholder="e.g. 101" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Room Type</label>
+                                <select id="editRoomType" name="roomType" class="form-select" required>
+                                    <option value="Single">Single Room</option>
+                                    <option value="Double">Double Room</option>
+                                    <option value="Deluxe">Deluxe Room</option>
+                                    <option value="Suite">Suite</option>
+                                    <option value="Penthouse">Penthouse</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Price per Night ($)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" id="editPricePerNight" name="pricePerNight" step="0.01" min="0" class="form-control" placeholder="0.00" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Max Guest Capacity</label>
+                                <select id="editCapacity" name="capacity" class="form-select" required>
+                                    <option value="1">1 Guest</option>
+                                    <option value="2">2 Guests</option>
+                                    <option value="3">3 Guests</option>
+                                    <option value="4">4 Guests</option>
+                                    <option value="5">5 Guests</option>
+                                    <option value="6">6 Guests</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Status</label>
+                                <select id="editStatus" name="status" class="form-select" required>
+                                    <option value="Available">Available</option>
+                                    <option value="Under Maintenance">Under Maintenance</option>
+                                    <option value="Booked">Booked</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-close-modal" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary btn-submit-modal">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Pre-fill the Edit Room modal fields when the edit button is clicked
+        document.addEventListener('DOMContentLoaded', function () {
+            const editRoomModal = document.getElementById('editRoomModal');
+            editRoomModal.addEventListener('show.bs.modal', function (event) {
+                const btn = event.relatedTarget;
+                const id       = btn.getAttribute('data-id');
+                const number   = btn.getAttribute('data-number');
+                const type     = btn.getAttribute('data-type');
+                const price    = btn.getAttribute('data-price');
+                const capacity = btn.getAttribute('data-capacity');
+                const status   = btn.getAttribute('data-status');
+
+                // Set form action dynamically to the specific room's update URL
+                document.getElementById('editRoomForm').action = '/web/rooms/update/' + id;
+
+                document.getElementById('editRoomNumber').value    = number;
+                document.getElementById('editPricePerNight').value = price;
+
+                // Set select values
+                document.getElementById('editRoomType').value = type;
+                document.getElementById('editCapacity').value = capacity;
+                document.getElementById('editStatus').value   = status;
+            });
+        });
+    </script>
+</body>
+</html>

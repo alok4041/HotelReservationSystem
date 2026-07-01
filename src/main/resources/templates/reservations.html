@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Reservations - Cozy Hotel</title>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --bg-dark: #0f172a;
+            --bg-light: #f8fafc;
+            --text-main: #1e293b;
+            --text-secondary: #64748b;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar-custom {
+            background-color: var(--bg-dark);
+            padding: 1.25rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .navbar-brand-custom {
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: #ffffff !important;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .brand-icon {
+            background: linear-gradient(135deg, var(--primary-color), #60a5fa);
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .main-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.03);
+            padding: 2.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title {
+            font-weight: 800;
+            font-size: 1.75rem;
+            letter-spacing: -0.5px;
+            color: var(--bg-dark);
+            margin: 0;
+        }
+
+        .table-responsive {
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table th {
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            padding: 1rem;
+            border-bottom: 1px solid #cbd5e1;
+        }
+
+        .table td {
+            padding: 1.25rem 1rem;
+            vertical-align: middle;
+            font-size: 0.9rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .table tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        .client-name {
+            font-weight: 700;
+            color: var(--bg-dark);
+            font-size: 0.95rem;
+        }
+
+        .room-tag {
+            background-color: #f1f5f9;
+            color: var(--text-main);
+            font-weight: 600;
+            padding: 0.35rem 0.75rem;
+            border-radius: 8px;
+            display: inline-block;
+            font-size: 0.85rem;
+        }
+
+        .date-text {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .price-text {
+            font-weight: 700;
+            color: var(--bg-dark);
+            font-size: 0.95rem;
+        }
+
+        /* Badges for status */
+        .status-badge {
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 30px;
+            display: inline-block;
+        }
+
+        .badge-checkout-pending {
+            background-color: #fff3cd;
+            color: #664d03;
+            border: 1px solid #ffc107;
+        }
+
+        .badge-checked-out {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .badge-cancelled {
+            background-color: #f8d7da;
+            color: #842029;
+        }
+
+        .btn-cancel-custom {
+            border-radius: 8px;
+            padding: 0.4rem 0.8rem;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Header -->
+    <nav class="navbar navbar-dark navbar-custom">
+        <div class="container">
+            <a class="navbar-brand-custom" href="/">
+                <div class="brand-icon">H</div>
+                <span>Cozy Hotel Portal</span>
+            </a>
+            <div>
+                <a th:href="@{/}" class="btn btn-outline-light btn-sm px-3 rounded-pill">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="main-card">
+            
+            <div class="section-header">
+                <div>
+                    <h1 class="section-title">Reservation Logs</h1>
+                    <p class="text-muted mb-0 small">View all past, current, and pending guest room bookings details.</p>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Guest</th>
+                            <th>Room Assigned</th>
+                            <th>Reservation Dates</th>
+                            <th>Price Charged</th>
+                            <th>Current Status</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="res : ${listReservations}">
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="avatar-placeholder" style="width: 40px; height: 40px; background-color: rgba(59, 130, 246, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-weight: bold; font-size: 0.95rem;" th:text="${res.customer.name.substring(0, 1).toUpperCase()}">
+                                        JD
+                                    </div>
+                                    <div>
+                                        <div class="client-name" th:text="${res.customer.name}">John Doe</div>
+                                        <div class="small text-muted" th:text="${res.customer.email}">johndoe@example.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <div class="room-tag" th:text="${'Room ' + res.room.roomNumber}">Room 101</div>
+                                    <div class="small text-muted mt-1" th:text="${res.room.roomType}">Deluxe Suite</div>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <div class="date-text">
+                                        <span class="fw-semibold">In:</span> 
+                                        <span th:text="${res.checkInDate}">2026-06-30</span>
+                                    </div>
+                                    <div class="date-text">
+                                        <span class="fw-semibold">Out:</span> 
+                                        <span th:text="${res.checkOutDate}">2026-07-01</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="price-text" th:text="${res.totalPrice != null ? '$' + res.totalPrice : 'N/A'}">$150.00</div>
+                                <div class="small text-muted" th:text="${res.numberOfGuests + ' Guest' + (res.numberOfGuests > 1 ? 's' : '')}">2 Guests</div>
+                            </td>
+                            <td>
+                                <span class="status-badge" 
+                                      th:classappend="${(res.status == 'Checkout Pending' or res.status == 'Pending') ? 'badge-checkout-pending' : (res.status == 'Checked Out' ? 'badge-checked-out' : (res.status == 'Cancelled' ? 'badge-cancelled' : 'badge-checked-out'))}" 
+                                      th:text="${(res.status == 'Pending') ? 'Checkout Pending' : res.status}">
+                                    Checkout Pending
+                                </span>
+                            </td>
+                            <td class="text-end">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a th:if="${res.status != 'Cancelled' and res.status != 'Checked Out'}" th:href="@{/web/reservations/checkout/{id}(id=${res.reservationId})}" class="btn btn-outline-success btn-cancel-custom">
+                                        Check Out
+                                    </a>
+                                    <a th:if="${res.status != 'Cancelled' and res.status != 'Checked Out'}" th:href="@{/web/reservations/cancel/{id}(id=${res.reservationId})}" class="btn btn-outline-warning btn-cancel-custom">
+                                        Cancel
+                                    </a>
+                                    <span th:if="${res.status == 'Cancelled' or res.status == 'Checked Out'}" class="text-muted small">None</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${listReservations.isEmpty()}">
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <p class="mb-0">No reservations logged in the database.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Bootstrap Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
