@@ -155,7 +155,7 @@
                 
                 <div class="row g-4">
                     <div class="col-md-6 col-lg-4" th:each="room : ${availableRooms}">
-                        <div class="room-card" th:onclick="'javascript:selectRoom(' + ${room.roomId} + ',\'' + ${room.roomNumber} + '\',' + ${room.pricePerNight} + ')'" th:data-id="${room.roomId}" th:data-number="${room.roomNumber}" th:data-price="${room.pricePerNight}">
+                        <div class="room-card" th:data-id="${room.roomId}" th:data-number="${room.roomNumber}" th:data-price="${room.pricePerNight}" onclick="selectRoom(this)">
                             <div class="room-header">
                                 <div class="room-type" th:text="${room.roomType}">Deluxe Room</div>
                                 <div class="room-price" th:text="'$' + ${room.pricePerNight} + ' / night'">$150 / night</div>
