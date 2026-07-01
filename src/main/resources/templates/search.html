@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Reservations - Cozy Hotel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --bg-dark: #0f172a;
+            --bg-light: #f8fafc;
+            --text-main: #1e293b;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar-custom {
+            background-color: var(--bg-dark);
+            padding: 1.25rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .navbar-brand-custom {
+            font-weight: 800;
+            font-size: 1.4rem;
+            color: #ffffff !important;
+        }
+        .brand-icon {
+            background: linear-gradient(135deg, var(--primary-color), #60a5fa);
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        .main-card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.03);
+            padding: 2.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        .search-box {
+            background: #f1f5f9;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .result-card {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+        }
+        .result-card:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            transform: translateY(-2px);
+        }
+        .reservation-id {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .guest-name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--bg-dark);
+        }
+        .reservation-details {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+        }
+        .badge {
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 30px;
+        }
+        .badge-pending {
+            background-color: #fff3cd;
+            color: #664d03;
+        }
+        .badge-confirmed {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+        .badge-cancelled {
+            background-color: #f8d7da;
+            color: #842029;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark navbar-custom">
+        <div class="container">
+            <a class="navbar-brand-custom" href="/">
+                <div class="brand-icon">H</div>
+                <span>Cozy Hotel Portal</span>
+            </a>
+            <div>
+                <a th:href="@{/}" class="btn btn-outline-light btn-sm px-3 rounded-pill">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="main-card">
+            <div class="text-center mb-4">
+                <h1 class="fw-bold" style="font-size: 2rem;">Search Reservations</h1>
+                <p class="text-muted mb-0">Find reservations by guest name, email, or phone</p>
+            </div>
+
+            <div class="search-box">
+                <form th:action="@{/search}" method="GET">
+                    <div class="input-group">
+                        <input type="text" name="keyword" class="form-control form-control-lg" 
+                               placeholder="Enter guest name, email, or phone number..."
+                               th:value="${keyword}">
+                        <button class="btn btn-primary btn-lg" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.079.098.119l3.004 3.003a1 1 0 0 0 1.415-1.414l-3.004-3.003c-.04-.036-.079-.068-.119-.098z"/>
+                                <path d="M6.5 12a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/>
+                            </svg>
+                            Search
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div th:if="${results != null and !results.isEmpty()}">
+                <h5 class="fw-semibold mb-3">
+                    Found <span th:text="${#lists.size(results)}" class="text-primary fw-bold">0</span> reservation(s)
+                </h5>
+                <div class="row g-3">
+                    <div class="col-md-6" th:each="res : ${results}">
+                        <div class="result-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <span class="reservation-id">Reservation #<span th:text="${res.reservationId}">123</span></span>
+                                <span th:classappend="${res.status == 'Pending' ? 'badge-pending' : (res.status == 'Confirmed' ? 'badge-confirmed' : 'badge-cancelled')}" 
+                                      class="badge" 
+                                      th:text="${res.status}">Pending</span>
+                            </div>
+                            <div class="guest-name" th:text="${res.customer.name}">John Doe</div>
+                            <div class="reservation-details">
+                                <div th:text="'Room: ' + ${res.room.roomNumber} + ' (' + ${res.room.roomType} + ')'">Room 101 (Deluxe)</div>
+                                <div th:text="'Check-in: ' + ${#temporals.format(res.checkInDate, 'MMM dd, yyyy')} + ' | Check-out: ' + ${#temporals.format(res.checkOutDate, 'MMM dd, yyyy')}">Check-in: Jul 15, 2024 | Check-out: Jul 20, 2024</div>
+                                <div th:text="'Guests: ' + ${res.numberOfGuests} + ' | Total: $' + ${res.totalPrice}">Guests: 2 | Total: $850.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div th:if="${keyword != null and results != null and results.isEmpty()}">
+                <div class="text-center py-5">
+                    <div class="mb-3" style="font-size: 3rem; color: #cbd5e1;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.079.098.119l3.004 3.003a1 1 0 0 0 1.415-1.414l-3.004-3.003c-.04-.036-.079-.068-.119-.098z"/>
+                            <path d="M6.5 12a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11z"/>
+                        </svg>
+                    </div>
+                    <h5 class="text-muted">No reservations found</h5>
+                    <p class="text-secondary">Try searching with a different guest name, email, or phone number</p>
+                </div>
+            </div>
+            
+            <div th:if="${keyword == null}">
+                <div class="text-center py-5">
+                    <p class="text-muted">Enter a search term above to find reservations</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
