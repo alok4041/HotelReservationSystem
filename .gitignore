@@ -1,4 +1,31 @@
 .classpath
-.classpath
 /target/
 .DS_Store
+
+# Database credentials and sensitive config
+src/main/resources/application.properties
+src/main/resources/application.yml
+src/main/resources/*.properties
+src/main/resources/*.yml
+src/main/resources/*.yaml
+
+# IDE and Eclipse specific
+.vscode/
+.settings/
+.project
+.classpath
+nb-configuration.xml
+
+# Build artifacts
+target/
+build/
+*.class
+
+# Logs
+*.log
+logs/
+
+# OS files
+Thumbs.db
+.DS_Store
+
