@@ -49,7 +49,13 @@ public class WebController {
             @RequestParam Integer roomId, @RequestParam LocalDate checkInDate,
             @RequestParam LocalDate checkOutDate, @RequestParam Integer numberOfGuests) {
         
-        Customer customer = customerService.createCustomer(new Customer(null, name, email, phone, null, null));
+        // Check if customer already exists by email
+        Customer customer = customerRepository.findByEmail(email);
+        if (customer == null) {
+            // Create new customer if not found
+            customer = customerService.createCustomer(new Customer(null, name, email, phone, null, null));
+        }
+        
         Reservation reservation = new Reservation();
         reservation.setCustomer(customer);
         reservation.setRoom(roomService.getRoomById(roomId));
