@@ -117,6 +117,12 @@ public class WebController {
         return "redirect:/web/rooms";
     }
 
+    @PostMapping("/web/rooms/update/{id}")
+    public String updateRoom(@PathVariable Integer id, @ModelAttribute Room room) {
+        roomService.updateRoom(id, room);
+        return "redirect:/web/rooms";
+    }
+
     @GetMapping("/web/rooms/delete/{id}")
     public String deleteRoom(@PathVariable Integer id) {
         roomService.deleteRoom(id);
