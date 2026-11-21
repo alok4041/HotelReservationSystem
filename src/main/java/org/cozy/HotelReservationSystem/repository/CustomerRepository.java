@@ -1,3 +1,6 @@
+
+// communicates with database..
+
 package org.cozy.HotelReservationSystem.repository;
 
 import java.util.List;

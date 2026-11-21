@@ -1,3 +1,7 @@
+
+//handles incoming http request from the user 
+
+
 package org.cozy.HotelReservationSystem.controller;
 
 import org.cozy.HotelReservationSystem.model.Customer;

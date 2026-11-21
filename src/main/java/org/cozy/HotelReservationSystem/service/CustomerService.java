@@ -1,3 +1,7 @@
+
+//contains the business logics 
+
+
 package org.cozy.HotelReservationSystem.service;
 
 import org.cozy.HotelReservationSystem.model.Customer;

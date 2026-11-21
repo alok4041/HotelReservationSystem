@@ -1,3 +1,6 @@
+
+// represents the database layer 
+
 package org.cozy.HotelReservationSystem.model;
 
 import jakarta.persistence.*;
